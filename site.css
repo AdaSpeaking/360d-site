@@ -1,0 +1,106 @@
+/* 360d 官網設計稿示意版：整頁圖當底，上面疊透明連結區塊 */
+:root { --navy: #12305f; --ink: #1f2d3d; --line: #e3e8f0; --hover: #eef3fa; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: #fff; font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif; }
+
+/* 一頁 = 一張圖。所有座標都用百分比，所以視窗縮放時連結會跟著圖走 */
+.page { position: relative; width: 100%; max-width: 1920px; margin: 0 auto; container-type: inline-size; background: #f4f6f9; }
+.shot { display: block; width: 100%; height: auto; }
+
+/* 連結區塊 */
+.hs { position: absolute; display: block; z-index: 2; border-radius: 4px; }
+.hs.area { z-index: 1; border-radius: 0; }
+.hs.btn:hover, .hs.nav:hover { background: rgba(18, 48, 95, .08); box-shadow: 0 0 0 1px rgba(18, 48, 95, .18); }
+.hs.cta { z-index: 3; pointer-events: none; }            /* 還沒設定目的地的按鈕：不擋下面的連結 */
+.hs.cta[href] { pointer-events: auto; }
+.hs.cta[href]:hover { background: rgba(255, 255, 255, .14); }
+.hs:focus-visible, .bar a:focus-visible { outline: 2px solid #2f6fed; outline-offset: 2px; }
+
+/* 頁內導覽的定位點 */
+.anc { position: absolute; left: 0; width: 1px; height: 1px; scroll-margin-top: calc(80 * 100cqw / 1920 + 12px); }
+
+/* 主選單：取圖片最上面 80px 當背景，往下捲時固定在頂端 */
+.bar { position: sticky; top: 0; z-index: 20; display: block; width: 100%;
+  height: calc(80 * 100cqw / 1920); margin-bottom: calc(-80 * 100cqw / 1920);
+  background-repeat: no-repeat; background-position: top center; background-size: 100% auto; background-color: #fff;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .06); }
+.bar .logo { position: absolute; top: 0; height: 100%; }
+.bar .mi { position: absolute; top: 0; height: 100%; }
+.bar .top { position: absolute; inset: 0; }
+.bar .mi:hover .top { box-shadow: inset 0 -3px 0 var(--navy); }
+
+/* 下拉選單（依網站地圖的分支選單） */
+.dd { display: none; position: absolute; top: 100%; left: 0; background: #fff; border-top: 3px solid var(--navy);
+  box-shadow: 0 10px 28px rgba(15, 30, 60, .16); padding: .5em 0; white-space: nowrap;
+  font-size: max(11px, calc(15 * 100cqw / 1920)); line-height: 1.5; color: var(--ink); }
+.mi:hover .dd, .mi:focus-within .dd { display: block; }
+.dd a { display: block; padding: .5em 1.4em; color: inherit; text-decoration: none; }
+.dd a:hover { background: var(--hover); color: var(--navy); }
+.dd.mega { padding: 1.1em .6em 1.2em; }
+.mi:hover .dd.mega, .mi:focus-within .dd.mega { display: flex; }
+.dd.mega .col { padding: 0 .9em; }
+.dd.mega .col + .col { border-left: 1px solid var(--line); }
+.dd.mega .hd { font-weight: 700; color: var(--navy); padding: .3em .6em .5em; }
+.dd.mega .gs { display: flex; }
+.dd.mega .g { min-width: 6.5em; }
+.dd.mega .sub { font-weight: 600; padding: .35em .6em; }
+.dd.mega .g a:not(.sub) { padding: .35em .6em; color: #4a5a70; }
+
+/* 右下角標示 */
+.badge { position: fixed; right: 14px; bottom: 14px; z-index: 30; padding: 6px 12px; border-radius: 999px;
+  background: rgba(18, 48, 95, .88); color: #fff; font-size: 12px; letter-spacing: .04em; pointer-events: none; }
+
+.imgerr { position: absolute; left: 4%; right: 4%; top: 120px; z-index: 25; padding: 18px 22px; background: #fff4f2;
+  border: 2px solid #d9482b; color: #7a1f0e; font-size: 16px; line-height: 1.7; border-radius: 8px; }
+
+/* 網址後面加 ?debug=1 可以看到所有連結區塊的位置 */
+.debug .hs { outline: 2px solid rgba(220, 40, 40, .85); background: rgba(220, 40, 40, .10); }
+.debug .hs.area { outline-color: rgba(30, 110, 240, .85); background: rgba(30, 110, 240, .06); }
+.debug .hs.nav { outline-color: rgba(20, 150, 80, .9); background: rgba(20, 150, 80, .14); }
+.debug .hs.cta { outline: 2px dashed rgba(150, 150, 150, .9); background: rgba(150, 150, 150, .12); }
+.debug .bar .mi, .debug .bar .logo { outline: 2px solid rgba(220, 40, 40, .85); background: rgba(220, 40, 40, .10); }
+
+/* ===== 首頁「專屬需求提問」互動（三層） ===== */
+.page.home { background: #fff; }
+.quiz { position: absolute; left: 0; width: 100%; z-index: 4; --u: calc(100cqw / 1920);
+  top: calc(var(--qy) * var(--u)); font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", system-ui, sans-serif; }
+.q1 { position: relative; height: calc(var(--qh) * var(--u)); }
+.qi { position: absolute; padding: 0; border: 0; background: transparent; border-radius: 999px; cursor: pointer; }
+.qi:hover { background: rgba(29, 53, 87, .12); box-shadow: 0 0 0 calc(3 * var(--u)) rgba(137, 180, 249, .9); }
+.qi:focus-visible, .qp:focus-visible, .qreset:focus-visible, .qcard:focus-visible { outline: 2px solid #89b4f9; outline-offset: 2px; }
+
+.qpanel { position: absolute; left: 0; top: 0; width: 100%; min-height: calc(var(--qh) * var(--u)); background: #1d3557; color: #fff;
+  padding: calc(24 * var(--u)) calc(360 * var(--u)) calc(48 * var(--u)); outline: 0; }
+.qpanel[hidden] { display: none; }
+.qpanel * { margin: 0; }
+.qt { font-size: calc(30 * var(--u)); line-height: calc(40 * var(--u)); font-weight: 700; text-align: center; }
+.qt::after { content: ""; display: block; width: calc(76 * var(--u)); height: calc(2 * var(--u)); margin: calc(8 * var(--u)) auto 0; background: #fff; }
+.qn { margin-top: calc(22 * var(--u)); font-size: calc(20 * var(--u)); line-height: calc(20 * var(--u)); font-weight: 400; }
+.qh { margin-top: calc(8 * var(--u)); font-size: calc(48 * var(--u)); line-height: calc(51 * var(--u)); font-weight: 700; }
+.qgrid { margin-top: calc(16 * var(--u)); display: grid; grid-template-columns: repeat(12, 1fr); column-gap: calc(24 * var(--u)); row-gap: calc(16 * var(--u)); }
+.qp { height: calc(50 * var(--u)); padding: 0 calc(16 * var(--u)); border: 0; border-radius: 999px; background: #fff; color: #1d3557; cursor: pointer;
+  font-family: inherit; font-weight: 700; font-size: calc(20 * var(--u)); line-height: 1; white-space: nowrap; }
+.qp:hover { background: #dbe8ff; }
+
+.qr1, .qr2 { font-size: calc(32 * var(--u)); line-height: calc(60 * var(--u)); font-weight: 400; }
+.qr1 { margin-top: calc(22 * var(--u)); }
+.qr2 { margin-top: calc(4 * var(--u)); }
+.qr1 b, .qr2 b { font-size: calc(48 * var(--u)); line-height: 1; font-weight: 700; }
+.qr3 { margin-top: calc(10 * var(--u)); font-size: calc(30 * var(--u)); line-height: calc(36 * var(--u)); }
+.qbar { display: flex; justify-content: flex-end; margin-top: calc(16 * var(--u)); }
+.qreset { width: calc(180 * var(--u)); height: calc(48 * var(--u)); border: 0; border-radius: calc(10 * var(--u)); background: #fff; color: #1d3557; cursor: pointer;
+  font-family: inherit; font-weight: 700; font-size: calc(28 * var(--u)); line-height: 1; letter-spacing: .04em; }
+.qreset:hover { background: #dbe8ff; }
+.qcards { display: grid; grid-template-columns: 1fr 1fr; gap: calc(24 * var(--u)); margin-top: calc(16 * var(--u)); }
+.qcard { display: flex; flex-direction: column; min-height: calc(364 * var(--u)); padding: calc(26 * var(--u)) calc(25 * var(--u)) calc(22 * var(--u));
+  border: 1px solid rgba(137, 180, 249, .75); border-top: calc(7 * var(--u)) solid #89b4f9; color: #fff; text-decoration: none; }
+.qcard:hover { background: rgba(137, 180, 249, .10); }
+.qcard h4 { font-size: calc(28 * var(--u)); line-height: calc(40 * var(--u)); font-weight: 700; }
+.qcard p { margin-top: calc(14 * var(--u)); font-size: calc(18 * var(--u)); line-height: calc(32 * var(--u)); text-align: justify; }
+.qmore { margin-top: auto; padding-top: calc(16 * var(--u)); font-size: calc(18 * var(--u)); color: #89b4f9; }
+
+/* 區塊展開時，下半段畫面整塊往下推 */
+.lower { position: absolute; left: 0; width: 100%; z-index: 1; top: calc(var(--ly) * 100cqw / 1920); height: calc(var(--lh) * 100cqw / 1920);
+  background-repeat: no-repeat; background-size: 100% auto; background-position: 0 calc(var(--ly) * -100cqw / 1920); transition: transform .3s ease; }
+.debug .qi { outline: 2px solid rgba(220, 40, 40, .85); background: rgba(220, 40, 40, .10); }
